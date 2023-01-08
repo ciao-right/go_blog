@@ -1,0 +1,9 @@
+system:
+  addr: 8080
+
+mysql:
+  address: "1.116.159.98"
+  port: "3306"
+  username: "root"
+  password: "111577"
+  database_name: "go_blog"
