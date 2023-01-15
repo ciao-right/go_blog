@@ -7,7 +7,7 @@ import (
 )
 
 type User struct {
-	baseModel
+	gorm.Model
 	Name     string `json:"name" validate:"required"`
 	Sex      uint8  `json:"sex" `
 	Address  string `json:"address" `
@@ -25,7 +25,7 @@ func (u *User) TableName() string {
 
 func (u *User) AfterCreate(DB *gorm.DB) (err error) {
 	fmt.Println("before", u)
-	DB.Model(u).Where("id = ?", u.ID).Update("created_on", utils.FormatTime(utils.GetNow(), "2006-01-02 15:04:05"))
+	DB.Model(u).Where("id = ?", u.ID).Update("created_at", utils.FormatTime(utils.GetNow(), "2006-01-02 15:04:05"))
 	return err
 }
 

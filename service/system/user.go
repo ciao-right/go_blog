@@ -27,9 +27,8 @@ func (u UserService) Register(user model.User) (userInter model.User, err error)
 
 func isExist(account string) bool {
 	var user model.User
-	global.GLOBAL_DB.First(&user, "account = ?", account)
-	//global.GLOBAL_DB.Where("account = ?", account).First(&user)
-	fmt.Println(user.ID)
+	global.GLOBAL_DB.Where("account = ?", account).First(&user)
+	fmt.Println(user)
 	if user.ID == 0 {
 		return false
 	}
