@@ -13,11 +13,12 @@ type UserService struct {
 
 func (u UserService) Register(user model.User) (userInter model.User, err error) {
 	var _user model.User
-	if !isExist(user.Account) {
+	if res, _ := isExist(user.Account); !res {
 		user.Password = utils.BcryptHash(user.Password)
 		user.State = 1
 		user.IsLogin = 0
-		fmt.Println(user)
+		//user.ID = uuid.NewV4().String()
+		fmt.Println(user.CreatedOn)
 		err = global.GLOBAL_DB.Create(&user).Error
 		return user, err
 	} else {
@@ -25,13 +26,25 @@ func (u UserService) Register(user model.User) (userInter model.User, err error)
 	}
 }
 
-func isExist(account string) bool {
-	var user model.User
-	global.GLOBAL_DB.Where("account = ?", account).First(&user)
-	fmt.Println(user)
-	if user.ID == 0 {
-		return false
+func (u UserService) Login(user utils.Login) (findUser model.User, err error) {
+	res, findUser := isExist(user.Account)
+	if res {
+		//存在
+		if utils.BcryptCheck(user.Password, findUser.Password) {
+			global.GLOBAL_DB.Where("account = ?", user.Account).Update("isLogin", 1)
+			return findUser, err
+		} else {
+			return findUser, errors.New("密码错误")
+		}
 	}
-	return true
+	return findUser, errors.New("请先注册")
+}
+
+func isExist(account string) (result bool, user model.User) {
+	global.GLOBAL_DB.Where("account = ?", account).First(&user)
+	if user.ID == 0 {
+		return false, user
+	}
+	return true, user
 
 }

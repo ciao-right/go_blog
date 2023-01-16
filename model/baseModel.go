@@ -1,9 +1,11 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
-type baseModel struct {
-	ID         uint      `gorm:"not null;primarykey" json:"id" `
-	CreatedOn  time.Time `json:"created_on"`
-	ModifiedOn time.Time `json:"modified_on"`
+type BaseModel struct {
+	ID         uint       `gorm:"primaryKey;not null;autoIncrement" json:"id" `
+	CreatedOn  *time.Time `json:"created_on"`
+	ModifiedOn *time.Time `json:"modified_on"`
 }

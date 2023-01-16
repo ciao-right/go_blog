@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator"
 	"go_blog/model"
 	service "go_blog/service/system"
+	"go_blog/utils"
 	"net/http"
 )
 
@@ -16,8 +17,8 @@ func (b *BaseApi) Register(c *gin.Context) {
 	var user model.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    200,
-			"message": "未知错误",
+			"code":    201,
+			"message": err,
 			"data":    0,
 		})
 		return
@@ -25,7 +26,6 @@ func (b *BaseApi) Register(c *gin.Context) {
 	v := validator.New()
 	err := v.Struct(user)
 	if err != nil {
-		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    200,
 			"data":    0,
@@ -33,9 +33,8 @@ func (b *BaseApi) Register(c *gin.Context) {
 		})
 		return
 	}
-	register, err := service.UserService{}.Register(user)
+	_, err = service.UserService{}.Register(user)
 	if err != nil {
-		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    201,
 			"data":    0,
@@ -45,14 +44,64 @@ func (b *BaseApi) Register(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code":    200,
-		"data":    register,
+		"data":    1,
 		"message": "注册成功",
 	})
 
 }
 
 func (b *BaseApi) Login(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
-	})
+	var loginObj utils.Login
+	if err := c.ShouldBindJSON(&loginObj); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    201,
+			"message": "参数错误",
+			"data":    0,
+		})
+		return
+	}
+
+	v := validator.New()
+	err := v.Struct(loginObj)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    201,
+			"message": "请输入正确的参数",
+			"data":    0,
+		})
+		return
+	}
+	findUser, err := service.UserService{}.Login(loginObj)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    201,
+			"message": err,
+			"data":    0,
+		})
+		return
+	}
+	fmt.Println(findUser)
+	if token, tokenErr := utils.GenerateToken(findUser.Account, findUser.Password); tokenErr != nil {
+		c.JSON(http.StatusAccepted, gin.H{
+			"code":    201,
+			"message": tokenErr,
+			"data":    nil,
+			"token":   "",
+		})
+	} else {
+		findUser.IsLogin = 1
+		findUser.Password = ""
+		c.JSON(http.StatusOK, gin.H{
+			"code":    200,
+			"message": "success",
+			"data": struct {
+				model.User
+				Token string `json:"token"`
+			}{
+				findUser,
+				token,
+			},
+		})
+	}
+
 }

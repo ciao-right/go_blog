@@ -12,7 +12,7 @@ func (b BaseRouter) InitBaseRouter(Router *gin.RouterGroup) (R gin.IRouter) {
 
 	baseApi := new(v1.ApiGroup).SystemApiGroup.BaseApi
 	{
-		baseRouter.GET("/login", baseApi.Login)
+		baseRouter.POST("/login", baseApi.Login)
 		baseRouter.POST("/register", baseApi.Register)
 	}
 	return baseRouter

@@ -7,3 +7,6 @@ mysql:
   username: "root"
   password: "111577"
   database_name: "go_blog"
+
+jwt:
+  secret: "asdfkhjkahhwjelkrjlkdjsglnadkgj"
