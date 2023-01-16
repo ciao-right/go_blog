@@ -96,9 +96,11 @@ func (b *BaseApi) Login(c *gin.Context) {
 			"message": "success",
 			"data": struct {
 				model.User
-				Token string `json:"token"`
+				CreatedOn string `json:"created_on"`
+				Token     string `json:"token"`
 			}{
 				findUser,
+				utils.FormatTime(*findUser.CreatedOn, utils.DateTime),
 				token,
 			},
 		})
