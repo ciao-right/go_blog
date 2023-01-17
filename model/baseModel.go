@@ -9,3 +9,8 @@ type BaseModel struct {
 	CreatedOn  *time.Time `json:"created_on"`
 	ModifiedOn *time.Time `json:"modified_on"`
 }
+
+type PageListModel struct {
+	Page  uint `json:"page"`
+	Limit uint `json:"limit"`
+}

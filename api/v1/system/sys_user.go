@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
+	"go_blog/common/global"
 	"go_blog/model"
 	service "go_blog/service/system"
 	"go_blog/utils"
@@ -89,6 +90,7 @@ func (b *BaseApi) Login(c *gin.Context) {
 			"token":   "",
 		})
 	} else {
+		// todo 应该在数据库中更新
 		findUser.IsLogin = 1
 		findUser.Password = ""
 		c.JSON(http.StatusOK, gin.H{
@@ -106,4 +108,27 @@ func (b *BaseApi) Login(c *gin.Context) {
 		})
 	}
 
+}
+
+type UserApi struct{}
+
+// GetUserList 获取用户列表
+func (u *UserApi) GetUserList(c *gin.Context) {
+	var userCond model.UserCond
+	err := c.ShouldBindJSON(&userCond)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    201,
+			"message": "参数错误",
+			"data":    nil,
+		})
+		return
+	}
+	userList, userListErr := service.UserService{}.GetUserList(userCond)
+	c.JSON(http.StatusOK, gin.H{
+		"code":    global.SUCCESS,
+		"message": "success",
+		"data":    userList,
+	})
+	fmt.Println(userList, userListErr)
 }

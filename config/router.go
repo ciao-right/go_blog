@@ -17,6 +17,8 @@ func Routers() *gin.Engine {
 	}
 	{
 		systemRouter.InitBaseRouter(PublicGroup)
+		systemRouter.InitUserRouter(PublicGroup)
+
 	}
 
 	return r

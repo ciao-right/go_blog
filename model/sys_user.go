@@ -20,6 +20,12 @@ type User struct {
 	IsLogin     int    `json:"isLogin"`
 }
 
+type UserCond struct {
+	PageListModel
+	Name  string
+	Phone string
+}
+
 func (u *User) TableName() string {
 	return "blog_users"
 }
@@ -33,6 +39,5 @@ func (u *User) BeforeCreate(DB *gorm.DB) (err error) {
 func (u *User) AfterUpdate(DB *gorm.DB) (err error) {
 	var time = utils.GetNow()
 	u.ModifiedOn = &time
-
 	return err
 }

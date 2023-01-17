@@ -48,3 +48,18 @@ func isExist(account string) (result bool, user model.User) {
 	return true, user
 
 }
+
+type userList struct {
+	model.User
+	CreatedOn  string `json:"created_on"`
+	ModifiedOn string `json:"modified_on"`
+	Password   string `json:"-"`
+}
+
+func (u UserService) GetUserList(userCond model.UserCond) (userList []userList, err error) {
+	global.GLOBAL_DB.Limit(int(userCond.Limit)).Offset(int(userCond.Page)).Where(&model.UserCond{Name: userCond.Name, Phone: userCond.Phone}).Find(&userList)
+	//for _, list := range userList {
+	//list.CreatedOn = utils.FormatTime(list.CreatedOn, utils.DateTime)
+	//}
+	return userList, err
+}
