@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/spf13/viper"
+	"go_blog/common/global"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -41,26 +41,30 @@ func FormatTime(time time.Time, format string) string {
 // GenerateToken 生成token
 func GenerateToken(account, password string) (string, error) {
 	now := GetNow()
+	secret := []byte(global.GlobalViper.GetString("jwt.secret"))
+
 	shouldTime := now.Add(24 * time.Hour)
 	claims := Login{
 		Account:  account,
 		Password: password,
 		StandardClaims: jwt.StandardClaims{
 			//token 有效期
+			IssuedAt:  GetNow().Unix(),
 			ExpiresAt: shouldTime.Unix(),
 			Issuer:    "go-blog",
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-	tokenString, err := token.SigningString()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(secret)
 	return tokenString, err
 }
 
 // ParseToken 解析token
 func ParseToken(token string) (*Login, error) {
+	secret := []byte(global.GlobalViper.GetString("jwt.secret"))
 	//用于解析鉴权的声明，方法内部主要是具体的解码和校验的过程，最终返回*Token
 	tokenClaims, err := jwt.ParseWithClaims(token, &Login{}, func(token *jwt.Token) (interface{}, error) {
-		return []string{viper.GetString("jwt.secret")}, nil
+		return secret, nil
 	})
 	if tokenClaims != nil {
 		if claims, ok := tokenClaims.Claims.(*Login); ok && tokenClaims.Valid {
@@ -68,4 +72,12 @@ func ParseToken(token string) (*Login, error) {
 		}
 	}
 	return nil, err
+}
+
+func GetPage(page, limit int) int {
+	result := 0
+	if page > 0 {
+		result = (page - 1) * limit
+	}
+	return result
 }

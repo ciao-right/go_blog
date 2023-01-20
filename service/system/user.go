@@ -31,7 +31,7 @@ func (u UserService) Login(user utils.Login) (findUser model.User, err error) {
 	if res {
 		//存在
 		if utils.BcryptCheck(user.Password, findUser.Password) {
-			global.GLOBAL_DB.Where("account = ?", user.Account).Update("isLogin", 1)
+			global.GLOBAL_DB.Model(&model.User{}).Where("account = ?", user.Account).Update("is_login", 1)
 			return findUser, err
 		} else {
 			return findUser, errors.New("密码错误")
@@ -57,9 +57,19 @@ type userList struct {
 }
 
 func (u UserService) GetUserList(userCond model.UserCond) (userList []userList, err error) {
-	global.GLOBAL_DB.Limit(int(userCond.Limit)).Offset(int(userCond.Page)).Where(&model.UserCond{Name: userCond.Name, Phone: userCond.Phone}).Find(&userList)
+
+	global.GLOBAL_DB.Limit(userCond.Limit).Offset(utils.GetPage(userCond.Page, userCond.Limit)).Where(&model.UserCond{Name: userCond.Name, Phone: userCond.Phone}).Find(&userList)
 	//for _, list := range userList {
 	//list.CreatedOn = utils.FormatTime(list.CreatedOn, utils.DateTime)
 	//}
 	return userList, err
+}
+
+func (u UserService) GetUserTotal(maps interface{}) (count int64) {
+	global.GLOBAL_DB.Model(&model.User{}).Where(maps).Count(&count)
+	return
+}
+func (u UserService) DelUser(id string) bool {
+	err := global.GLOBAL_DB.Where("id = ?", id).Delete(&model.User{})
+	return err != nil
 }

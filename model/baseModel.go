@@ -11,6 +11,6 @@ type BaseModel struct {
 }
 
 type PageListModel struct {
-	Page  uint `json:"page"`
-	Limit uint `json:"limit"`
+	Page  int `json:"page"`
+	Limit int `json:"limit"`
 }

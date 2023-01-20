@@ -22,8 +22,8 @@ type User struct {
 
 type UserCond struct {
 	PageListModel
-	Name  string
-	Phone string
+	Name  string `json:"name"`
+	Phone string `json:"phone"`
 }
 
 func (u *User) TableName() string {

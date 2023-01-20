@@ -2,8 +2,8 @@ package config
 
 import (
 	"github.com/gin-gonic/gin"
+	middleware "go_blog/middleware/jwt"
 	"go_blog/router"
-	"net/http"
 )
 
 func Routers() *gin.Engine {
@@ -11,14 +11,12 @@ func Routers() *gin.Engine {
 	systemRouter := new(router.RoutersGroupApp).System
 	PublicGroup := r.Group("")
 	{
-		PublicGroup.GET("/health", func(c *gin.Context) {
-			c.JSON(http.StatusOK, "ok")
-		})
-	}
-	{
 		systemRouter.InitBaseRouter(PublicGroup)
-		systemRouter.InitUserRouter(PublicGroup)
-
+	}
+	PrivateGroup := r.Group("")
+	PrivateGroup.Use(middleware.Jwt())
+	{
+		systemRouter.InitUserRouter(PrivateGroup)
 	}
 
 	return r
