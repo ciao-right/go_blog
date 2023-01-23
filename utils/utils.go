@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"go_blog/common/global"
+	"go_blog/model/other"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -80,4 +81,16 @@ func GetPage(page, limit int) int {
 		result = (page - 1) * limit
 	}
 	return result
+}
+
+func ResStruct(code int, message string, data interface{}) other.ResStruct {
+	return other.ResStruct{
+		Code:    code,
+		Message: message,
+		Data:    data,
+	}
+}
+
+func ErrToString(err error) string {
+	return fmt.Sprintf("%s", err)
 }

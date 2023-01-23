@@ -16,6 +16,7 @@ func Routers() *gin.Engine {
 	PrivateGroup := r.Group("")
 	PrivateGroup.Use(middleware.Jwt())
 	{
+		systemRouter.InitGoodsRouter(PrivateGroup)
 		systemRouter.InitUserRouter(PrivateGroup)
 	}
 

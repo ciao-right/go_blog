@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go_blog/common/global"
-	"go_blog/model"
+	"go_blog/model/request"
 	service "go_blog/service/system"
 	"net/http"
 )
@@ -13,7 +13,7 @@ type UserApi struct{}
 
 // GetUserList 获取用户列表
 func (u *UserApi) GetUserList(c *gin.Context) {
-	var userCond model.UserCond
+	var userCond request.UserCond
 	logic := service.UserService{}
 	err := c.ShouldBindJSON(&userCond)
 	fmt.Println(userCond.Page)
@@ -74,7 +74,30 @@ func (u *UserApi) DelUser(c *gin.Context) {
 }
 
 func (u *UserApi) UpdateUser(c *gin.Context) {
-	var bindUser model.User
-	c.ShouldBindJSON(&bindUser)
+	var bindUser request.User
+	err := c.ShouldBindJSON(&bindUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    201,
+			"message": err,
+			"data":    0,
+		})
+		return
+	}
+	logic := service.UserService{}
+	dbErr := logic.UpdateUser(bindUser)
+	if dbErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    201,
+			"message": dbErr,
+			"data":    0,
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    200,
+			"message": "success",
+			"data":    1,
+		})
+	}
 
 }

@@ -3,7 +3,8 @@ package system
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	"go_blog/model"
+	"go_blog/model/request"
+	"go_blog/model/response"
 	service "go_blog/service/system"
 	"go_blog/utils"
 	"net/http"
@@ -13,7 +14,7 @@ type BaseApi struct {
 }
 
 func (b *BaseApi) Register(c *gin.Context) {
-	var user model.User
+	var user request.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    201,
@@ -91,14 +92,10 @@ func (b *BaseApi) Login(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    200,
 			"message": "success",
-			"data": struct {
-				model.User
-				CreatedOn string `json:"created_on"`
-				Token     string `json:"token"`
-			}{
-				findUser,
-				utils.FormatTime(*findUser.CreatedOn, utils.DateTime),
-				token,
+			"data": response.LoginRes{
+				User:      findUser,
+				CreatedOn: utils.FormatTime(findUser.CreatedOn, utils.DateTime),
+				Token:     token,
 			},
 		})
 	}
