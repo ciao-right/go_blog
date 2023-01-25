@@ -3,9 +3,11 @@ package utils
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"go_blog/common/global"
 	"go_blog/model/other"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 	"time"
 )
 
@@ -92,5 +94,10 @@ func ResStruct(code int, message string, data interface{}) other.ResStruct {
 }
 
 func ErrToString(err error) string {
-	return fmt.Sprintf("%s", err)
+	errString := fmt.Sprintf("%s", err)
+	return errString
+}
+
+func ErrorRes(err error, c *gin.Context) {
+	c.JSON(http.StatusOK, ResStruct(201, ErrToString(err), nil))
 }

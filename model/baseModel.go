@@ -14,3 +14,8 @@ type PageListModel struct {
 	Page  int `json:"page"`
 	Limit int `json:"limit"`
 }
+
+type OverrideTimeModel struct {
+	CreatedOn  string `json:"created_on" `
+	ModifiedOn string `json:"modified_on"`
+}

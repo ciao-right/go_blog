@@ -15,6 +15,9 @@ type User struct {
 	Avatar      string `json:"avatar" gorm:"default:'';commit:头像"`
 	State       int    `json:"state"`
 	IsLogin     int    `json:"isLogin"`
+	RoleId      int    `json:"roleId"`
+	DeptId      int    `json:"deptId"`
+	Remark      string `json:"remark"`
 }
 
 type UserCond struct {

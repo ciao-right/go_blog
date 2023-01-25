@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"go_blog/common/global"
-	"go_blog/model/request"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -32,6 +31,6 @@ func getDbConfig() string {
 
 func RegisterTables(db *gorm.DB) {
 	// 注册表
-	db.AutoMigrate(request.User{})
+	//db.AutoMigrate(request.User{})
 	//db.AutoMigrate(request.GoodsClassification{})
 }

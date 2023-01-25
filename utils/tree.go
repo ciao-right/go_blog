@@ -3,8 +3,9 @@ package utils
 import "sort"
 
 type Tree struct {
-	Title           string      `json:"title"`            //节点名字
-	Data            interface{} `json:"data"`             //自定义对象
+	Title           string      `json:"title"` //节点名字
+	Data            interface{} `json:"data"`  //自定义对象
+	Id              int         `json:"id"`
 	Leaf            bool        `json:"leaf"`             //叶子节点
 	Selected        bool        `json:"checked"`          //选中
 	PartialSelected bool        `json:"partial_selected"` //部分选中
@@ -48,6 +49,7 @@ func GenerateTree(nodes, selectedNodes []INode) (trees []Tree) {
 		childTree := &Tree{
 			Title: v.GetTitle(),
 			Data:  v.GetData(),
+			Id:    int(v.GetId()),
 		}
 		// 递归之前，根据父节点确认 childTree 的选中状态
 		childTree.Selected = nodeSelected(v, selectedNodes, childTree.Children)
@@ -78,6 +80,7 @@ func recursiveTree(tree *Tree, nodes, selectedNodes []INode) {
 			childTree := &Tree{
 				Title: v.GetTitle(),
 				Data:  v.GetData(),
+				Id:    int(v.GetId()),
 			}
 			// 递归之前，根据子节点和父节点确认 childTree 的选中状态
 			childTree.Selected = nodeSelected(v, selectedNodes, childTree.Children) || tree.Selected
@@ -153,7 +156,6 @@ func nodeSelected(node INode, selectedNodes []INode, children []Tree) bool {
 			return true
 		}
 	}
-
 	if len(children) == 0 {
 		// 2. 不满足前置条件1，且没有子节点
 		return false

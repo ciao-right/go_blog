@@ -82,6 +82,7 @@ func (g GoodsClassApi) DelGoodsClass(c *gin.Context) {
 func (g GoodsClassApi) GetGoodsClassList(c *gin.Context) {
 	logic := service.GoodsClassService{}
 	list := logic.GetGoodsClass()
+
 	resp := utils.GenerateTree(goodsClassList.ConvertToINodeArray(list), nil)
 	c.JSON(http.StatusOK, utils.ResStruct(200, "success", resp))
 
