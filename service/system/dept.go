@@ -45,12 +45,16 @@ func (d DeptService) DelDept(id string) error {
 	}
 }
 
-func (d DeptService) GetDept(condition map[string]string) []response.Department {
+func (d DeptService) GetDept(condition map[string]interface{}) []response.Department {
 	var list []request.Department
 	if condition["name"] == "" {
-		global.GLOBAL_DB.Find(&list)
+		if value, ok := condition["state"]; ok {
+			global.GLOBAL_DB.Where("state = ?", value).Find(&list)
+		} else {
+			global.GLOBAL_DB.Find(&list)
+		}
 	} else {
-		global.GLOBAL_DB.Where("name like ?", "%"+condition["name"]+"%").Find(&list)
+		global.GLOBAL_DB.Where("name like ?", "%"+condition["name"].(string)+"%").Where("state = ?", condition["state"]).Find(&list)
 	}
 	resList := make([]response.Department, len(list))
 	for i, v := range list {

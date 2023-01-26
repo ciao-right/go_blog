@@ -22,11 +22,11 @@ func (l deptList) ToINode() (nodes []utils.INode) {
 }
 func (d DepartmentApi) GetDept(c *gin.Context) {
 	logic := service.DeptService{}
-	condition := make(map[string]string)
-	//todo
-	// 还需要加 一个state 用来其他地方筛选出可以使用的dept
-	// 还需要考虑修改或者删除上级部门时 会发生的情况
+	condition := make(map[string]interface{})
 	condition["name"] = c.Query("name")
+	if c.Query("state") != "" {
+		condition["state"] = c.Query("state")
+	}
 	list := logic.GetDept(condition)
 	reps := utils.GenerateTree(deptList.ToINode(list), nil)
 	c.JSON(http.StatusOK, utils.ResStruct(200, "success", reps))
