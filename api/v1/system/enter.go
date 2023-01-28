@@ -5,4 +5,5 @@ type ApiGroup struct {
 	UserApi
 	GoodsClassApi
 	DepartmentApi
+	RoleApi
 }

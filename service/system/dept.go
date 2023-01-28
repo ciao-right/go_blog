@@ -28,7 +28,6 @@ func (d DeptService) AddDept(dept request.Department) error {
 		result := global.GLOBAL_DB.Create(&dept)
 		return result.Error
 	}
-
 }
 
 func (d DeptService) UpdateDept(dept response.Department) error {

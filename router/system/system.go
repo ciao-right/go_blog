@@ -4,4 +4,5 @@ type SysRouterGroup struct {
 	BaseRouter
 	UserRouter
 	GoodsRouter
+	RoleRouter
 }
