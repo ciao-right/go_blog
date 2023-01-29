@@ -9,4 +9,4 @@ mysql:
   database_name: "go_blog"
 
 jwt:
-  secret: "asdfkhjkahhwjelkrjlkdjsglnadkgj"
+  secret: "blog_jwt_key"

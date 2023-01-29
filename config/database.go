@@ -2,14 +2,16 @@ package config
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
-	"go_blog/model"
+	"go_blog/common/global"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func InitDb() *gorm.DB {
-	if db, err := gorm.Open(mysql.Open(getDbConfig()), &gorm.Config{}); err == nil {
+	if db, err := gorm.Open(mysql.Open(getDbConfig()), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	}); err == nil {
 		return db
 	} else {
 		fmt.Println(err)
@@ -18,16 +20,17 @@ func InitDb() *gorm.DB {
 }
 
 func getDbConfig() string {
-	username := viper.GetString("mysql.username")
-	password := viper.GetString("mysql.password")
-	address := viper.GetString("mysql.address")
-	port := viper.GetString("mysql.port")
-	databaseName := viper.GetString("mysql.database_name")
+	username := global.GlobalViper.GetString("mysql.username")
+	password := global.GlobalViper.GetString("mysql.password")
+	address := global.GlobalViper.GetString("mysql.address")
+	port := global.GlobalViper.GetString("mysql.port")
+	databaseName := global.GlobalViper.GetString("mysql.database_name")
 	fmt.Println(fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, address, port, databaseName))
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, address, port, databaseName)
 }
 
 func RegisterTables(db *gorm.DB) {
 	// 注册表
-	db.AutoMigrate(model.User{})
+	//db.AutoMigrate(request.User{})
+	//db.AutoMigrate(request.GoodsClassification{})
 }

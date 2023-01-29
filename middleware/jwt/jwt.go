@@ -1,4 +1,4 @@
-package jwt
+package middleware
 
 import (
 	"github.com/gin-gonic/gin"
@@ -9,9 +9,16 @@ import (
 func Jwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		message := "success"
-		token := c.Query("token")
+		token := c.Request.Header.Get("token")
 		if token == "" {
 			message = "token为空"
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code":    201,
+				"message": message,
+				"data":    0,
+			})
+			c.Abort()
+			return
 		}
 		claims, err := utils.ParseToken(token)
 		if err != nil {
@@ -28,11 +35,6 @@ func Jwt() gin.HandlerFunc {
 			c.Abort()
 			return
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code":    200,
-				"message": message,
-				"data":    1,
-			})
 			c.Next()
 		}
 	}

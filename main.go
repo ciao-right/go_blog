@@ -7,7 +7,7 @@ import (
 
 func main() {
 	//初始化 viper
-	config.InitViper()
+	global.GlobalViper = config.InitViper()
 	//初始化数据库
 	global.GLOBAL_DB = config.InitDb()
 	if global.GLOBAL_DB != nil {

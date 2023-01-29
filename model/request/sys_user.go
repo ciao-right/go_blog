@@ -1,12 +1,9 @@
-package model
+package request
 
-import (
-	"go_blog/utils"
-	"gorm.io/gorm"
-)
+import "go_blog/model"
 
 type User struct {
-	BaseModel
+	model.BaseModel
 	Name        string `json:"name" validate:"required"`
 	Account     string `json:"account" validate:"required"`
 	Password    string `json:"password,omitempty" validate:"required,min=6"`
@@ -18,26 +15,17 @@ type User struct {
 	Avatar      string `json:"avatar" gorm:"default:'';commit:头像"`
 	State       int    `json:"state"`
 	IsLogin     int    `json:"isLogin"`
+	RoleId      int    `json:"roleId"`
+	DeptId      int    `json:"deptId"`
+	Remark      string `json:"remark"`
 }
 
 type UserCond struct {
-	PageListModel
-	Name  string
-	Phone string
+	model.PageListModel
+	Name  string `json:"name"`
+	Phone string `json:"phone"`
 }
 
 func (u *User) TableName() string {
 	return "blog_users"
-}
-
-func (u *User) BeforeCreate(DB *gorm.DB) (err error) {
-	var time = utils.GetNow()
-	u.CreatedOn = &time
-	return err
-}
-
-func (u *User) AfterUpdate(DB *gorm.DB) (err error) {
-	var time = utils.GetNow()
-	u.ModifiedOn = &time
-	return err
 }

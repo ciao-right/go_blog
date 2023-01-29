@@ -1,19 +1,21 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+	"os"
+)
 
-func InitViper() {
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-	viper.SetConfigType("yaml")
-	if err := viper.ReadInConfig(); err != nil {
+func InitViper() *viper.Viper {
+	path, _ := os.Getwd()
+	v := viper.New()
+	v.AddConfigPath(path)
+	v.SetConfigName("config")
+	v.SetConfigType("yaml")
+	if err := v.ReadInConfig(); err != nil {
 		if err != nil {
 			//viper.ConfigFileNotFoundError 未找到文件的错误
-			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-				panic("配置文件未找到")
-			} else {
-				panic("未知错误")
-			}
+			panic(err)
 		}
 	}
+	return v
 }
