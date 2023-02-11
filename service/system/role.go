@@ -17,8 +17,11 @@ func (r RoleService) AddRole(newRole request.Role) error {
 
 func (r RoleService) GetRoleList(page, limit int, condition request.Role) (roleList []response.RoleRes, err error) {
 	result := global.GLOBAL_DB.Where(condition).Offset(utils.GetPage(page, limit)).Limit(limit).Find(&roleList)
-
 	return roleList, result.Error
+}
+func (r RoleService) GetListTotal(condition request.Role) (total int64, err error) {
+	result := global.GLOBAL_DB.Where(condition).Find(&[]response.RoleRes{}).Count(&total)
+	return total, result.Error
 }
 
 func (r RoleService) UpdateRole(role request.Role) error {

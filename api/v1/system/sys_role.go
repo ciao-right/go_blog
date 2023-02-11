@@ -33,10 +33,13 @@ func (r RoleApi) GetList(c *gin.Context) {
 		utils.ErrorRes(err, c)
 		return
 	}
+	var res = make(map[string]interface{})
+	res["list"] = list
+	res["total"], _ = logic.GetListTotal(condition)
 	c.JSON(http.StatusOK, gin.H{
 		"code":    200,
 		"message": 1,
-		"data":    list,
+		"data":    res,
 	})
 }
 

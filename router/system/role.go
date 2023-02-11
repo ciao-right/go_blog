@@ -13,5 +13,6 @@ func (r *RoleRouter) InitRoleRouter(router *gin.RouterGroup) gin.IRouter {
 	roleRouter.GET("/getList", roleApi.GetList)
 	roleRouter.POST("/addRole", roleApi.AddRole)
 	roleRouter.POST("/updateRole", roleApi.UpdateRole)
+	roleRouter.GET("/deleteRole", roleApi.DeleteRole)
 	return roleRouter
 }

@@ -11,15 +11,17 @@ type FTime struct {
 }
 type BaseModel struct {
 	ID         uint  `gorm:"primaryKey;not null;autoIncrement" json:"id" `
-	CreatedOn  FTime `json:"created_on" gorm:"autoCreateTime"`
-	ModifiedOn FTime `json:"modified_on" gorm:"autoUpdateTime"`
+	CreatedOn  FTime `json:"created_on" gorm:"comment:创建时间;autoCreateTime"`
+	ModifiedOn FTime `json:"modified_on" gorm:"comment:更新时间; autoUpdateTime"`
 }
 
+// PageListModel 分页模型
 type PageListModel struct {
 	Page  int `json:"page"`
 	Limit int `json:"limit"`
 }
 
+// OverrideTimeModel 重写时间模型
 type OverrideTimeModel struct {
 	CreatedOn  string `json:"created_on" `
 	ModifiedOn string `json:"modified_on"`

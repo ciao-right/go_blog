@@ -5,9 +5,11 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"go_blog/common/global"
+	"go_blog/model"
 	"go_blog/model/other"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -39,6 +41,10 @@ func GetNow() time.Time {
 
 func FormatTime(time time.Time, format string) string {
 	return time.Format(format)
+}
+
+func TimeToString(time model.FTime) string {
+	return time.Format(DateTime)
 }
 
 // GenerateToken 生成token
@@ -100,4 +106,8 @@ func ErrToString(err error) string {
 
 func ErrorRes(err error, c *gin.Context) {
 	c.JSON(http.StatusOK, ResStruct(201, ErrToString(err), nil))
+}
+func StringToInt(str string) int {
+	result, _ := strconv.Atoi(str)
+	return result
 }

@@ -5,4 +5,5 @@ type SysRouterGroup struct {
 	UserRouter
 	GoodsRouter
 	RoleRouter
+	DictRouter
 }
