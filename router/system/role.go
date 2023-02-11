@@ -12,5 +12,6 @@ func (r *RoleRouter) InitRoleRouter(router *gin.RouterGroup) gin.IRouter {
 	roleApi := new(v1.ApiGroup).SystemApiGroup.RoleApi
 	roleRouter.GET("/getList", roleApi.GetList)
 	roleRouter.POST("/addRole", roleApi.AddRole)
+	roleRouter.POST("/updateRole", roleApi.UpdateRole)
 	return roleRouter
 }

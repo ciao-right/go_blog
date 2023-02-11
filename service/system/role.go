@@ -25,3 +25,9 @@ func (r RoleService) UpdateRole(role request.Role) error {
 	result := global.GLOBAL_DB.Updates(&role)
 	return result.Error
 }
+
+func (r RoleService) DeleteRole(id int) error {
+	var role request.Role
+	result := global.GLOBAL_DB.Where("id=?", id).Delete(&role)
+	return result.Error
+}

@@ -4,10 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"go_blog/common/global"
-	"go_blog/model"
 	"go_blog/model/request"
 	"go_blog/model/response"
-	"go_blog/utils"
 )
 
 type DeptService struct {
@@ -59,10 +57,6 @@ func (d DeptService) GetDept(condition map[string]interface{}) []response.Depart
 	for i, v := range list {
 		resList[i] = response.Department{
 			Department: v,
-			OverrideTimeModel: model.OverrideTimeModel{
-				CreatedOn:  utils.FormatTime(v.CreatedOn, utils.DateTime),
-				ModifiedOn: utils.FormatTime(v.ModifiedOn, utils.DateTime),
-			},
 		}
 	}
 	return resList

@@ -93,9 +93,8 @@ func (b *BaseApi) Login(c *gin.Context) {
 			"code":    200,
 			"message": "success",
 			"data": response.LoginRes{
-				User:      findUser,
-				CreatedOn: utils.FormatTime(findUser.CreatedOn, utils.DateTime),
-				Token:     token,
+				User:  findUser,
+				Token: token,
 			},
 		})
 	}

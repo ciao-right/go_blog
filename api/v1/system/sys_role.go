@@ -66,3 +66,50 @@ func (r RoleApi) AddRole(c *gin.Context) {
 		"data":    1,
 	})
 }
+
+func (r RoleApi) UpdateRole(c *gin.Context) {
+	var role request.Role
+	err := c.ShouldBindJSON(&role)
+	if err != nil {
+		fmt.Println(err)
+		utils.ErrorRes(err, c)
+		return
+	}
+	v := validator.New()
+	vErr := v.Struct(role)
+	if vErr != nil {
+		fmt.Println(vErr)
+		utils.ErrorRes(vErr, c)
+		return
+
+	}
+	logic := service.RoleService{}
+	lErr := logic.UpdateRole(role)
+	if lErr != nil {
+		fmt.Println(lErr)
+		utils.ErrorRes(lErr, c)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "success",
+		"data":    1,
+	})
+
+}
+
+func (r RoleApi) DeleteRole(c *gin.Context) {
+	logic := service.RoleService{}
+	id, _ := strconv.Atoi(c.Query("id"))
+	err := logic.DeleteRole(id)
+	if err != nil {
+		fmt.Println(err)
+		utils.ErrorRes(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "success",
+		"data":    1,
+	})
+}
