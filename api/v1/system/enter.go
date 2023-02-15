@@ -1,5 +1,9 @@
 package system
 
+import (
+	"go_blog/api/v1/system/ehs/riskBaseConfig"
+)
+
 type ApiGroup struct {
 	BaseApi
 	UserApi
@@ -7,4 +11,5 @@ type ApiGroup struct {
 	DepartmentApi
 	RoleApi
 	DictApi
+	riskBaseConfig.EHSApi
 }
