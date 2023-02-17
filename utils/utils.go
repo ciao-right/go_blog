@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/xuri/excelize/v2"
 	"go_blog/common/global"
 	"go_blog/model"
 	"go_blog/model/other"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"reflect"
 	"strconv"
 	"time"
 )
@@ -110,4 +112,21 @@ func ErrorRes(err error, c *gin.Context) {
 func StringToInt(str string) int {
 	result, _ := strconv.Atoi(str)
 	return result
+}
+
+func MakeExcel[T any](c *gin.Context, list []T) {
+	// 生成excel
+	f := excelize.NewFile()
+	// 设置表头
+	f.SetCellValue("sheet1", "A1", "序号")
+	// 根据指定路径保存文件
+	//if err := f.saveas("book1.xlsx"); err != nil {
+	//	fmt.println(err)
+	//}
+}
+
+func GetStructLabel[T any](target T) []string {
+	refType := reflect.TypeOf(target)
+	fmt.Println(refType)
+	return nil
 }
