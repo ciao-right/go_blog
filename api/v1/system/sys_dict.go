@@ -1,8 +1,8 @@
 package system
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator"
 	"go_blog/model/request"
 	service "go_blog/service/system"
 	"go_blog/utils"
@@ -49,13 +49,16 @@ func (d DictApi) AddDict(c *gin.Context) {
 	var dict request.Dict
 
 	err := c.ShouldBindJSON(&dict)
-	fmt.Println(dict)
-	fmt.Println(err)
 	if err != nil {
 		utils.ErrorRes(err, c)
 		return
 	}
-	fmt.Println(err)
+	v := validator.New()
+	err = v.Struct(dict)
+	if err != nil {
+		utils.ErrorRes(err, c)
+		return
+	}
 	logic := service.DictService{}
 	err = logic.AddDict(dict)
 	if err != nil {
