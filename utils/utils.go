@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -114,19 +115,60 @@ func StringToInt(str string) int {
 	return result
 }
 
-func MakeExcel[T any](c *gin.Context, list []T) {
+func MakeExcel[T any](list []T) string {
 	// 生成excel
 	f := excelize.NewFile()
 	// 设置表头
+	fieldList := GetStructLabel(list[0])
 	f.SetCellValue("sheet1", "A1", "序号")
+	for i, v := range fieldList {
+		f.SetCellValue("sheet1", fmt.Sprintf("%v%d", string(rune(65+i+1)), 1), v)
+	}
+	// 设置内容
+	for i, v := range list {
+		word := rune(66)
+		f.SetCellValue("sheet1", fmt.Sprintf("A%d", i+2), i+1)
+		for j := 0; j < reflect.TypeOf(v).NumField(); j++ {
+			if reflect.TypeOf(reflect.ValueOf(v).Field(j).Interface()).String() != "model.BaseModel" {
+				f.SetCellValue("sheet1", fmt.Sprintf("%v%d", string(word), i+2), reflect.ValueOf(v).Field(j).Interface())
+				word++
+			}
+		}
+	}
 	// 根据指定路径保存文件
-	//if err := f.saveas("book1.xlsx"); err != nil {
-	//	fmt.println(err)
-	//}
+	err := f.SaveAs("../file/excel/test.xlsx")
+	if err != nil {
+		return ""
+	}
+	return "/file/excel/test.xlsx"
+
 }
 
 func GetStructLabel[T any](target T) []string {
 	refType := reflect.TypeOf(target)
-	fmt.Println(refType)
-	return nil
+	var list []string
+	for i := 0; i < refType.NumField(); i++ {
+		list = append(list, refType.Field(i).Tag.Get("gorm"))
+	}
+	var result []string
+	for _, v := range list {
+		if BetweenString(v, "comment:", ";") != "" {
+			result = append(result, BetweenString(v, "comment:", ";"))
+		}
+	}
+	fmt.Println(result)
+	return result
+}
+
+func BetweenString(str, starting, ending string) string {
+	s := strings.Index(str, starting)
+	if s < 0 {
+		return ""
+	}
+	s += len(starting)
+	e := strings.Index(str[s:], ending)
+	if e < 0 {
+		return ""
+	}
+	return str[s : s+e]
 }

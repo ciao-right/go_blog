@@ -59,7 +59,12 @@ func (EHSApi) GetAreaConfigList(c *gin.Context) {
 			return
 		}
 		utils.GetStructLabel(config)
-		utils.MakeExcel(c, list)
+		fileUrl := utils.MakeExcel(list)
+		c.JSON(200, gin.H{
+			"message": "success",
+			"data":    fileUrl,
+			"code":    200,
+		})
 		return
 	} else {
 		list, err := logic.GetAreaConfigList(page, limit, config)
