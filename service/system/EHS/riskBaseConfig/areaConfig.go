@@ -1,6 +1,7 @@
 package riskBaseService
 
 import (
+	"fmt"
 	"go_blog/common/global"
 	"go_blog/model/request/riskBaseConfig"
 	"go_blog/utils"
@@ -14,7 +15,8 @@ func (RiskService) AddAreaConfig(config riskBaseConfig.RiskAreaConfig) error {
 }
 
 func (RiskService) GetAreaConfigList(page, limit int, condition riskBaseConfig.RiskAreaConfig) (list []riskBaseConfig.RiskAreaConfig, err error) {
-	result := global.GLOBAL_DB.Offset(utils.GetPage(page, limit)).Limit(limit).Find(&list, condition)
+	result := global.GLOBAL_DB.Preload("ResponsibleDepartment").Preload("ResponsiblePerson").Offset(utils.GetPage(page, limit)).Limit(limit).Find(&list, condition)
+	fmt.Println(result)
 	return list, result.Error
 }
 
