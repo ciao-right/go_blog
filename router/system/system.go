@@ -9,4 +9,5 @@ type SysRouterGroup struct {
 	RoleRouter
 	DictRouter
 	EHSRouter.EHSRouter
+	EHSRouter.RiskReportConfig
 }

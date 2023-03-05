@@ -22,6 +22,7 @@ func Routers() *gin.Engine {
 		systemRouter.InitRoleRouter(PrivateGroup)
 		systemRouter.InitDictRouter(PrivateGroup)
 		systemRouter.InitEHSRouter(PrivateGroup)
+		systemRouter.InitRiskReportConfig(PrivateGroup)
 	}
 
 	return r
