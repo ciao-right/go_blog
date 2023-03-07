@@ -11,3 +11,7 @@ func (r RiskReportConfigService) AddRiskReportConfig(riskReport riskBaseConfig.R
 	res := global.GLOBAL_DB.Create(&riskReport)
 	return res.Error
 }
+
+func (r RiskReportConfigService) GetRiskReportConfigList(page int, limit int, config riskBaseConfig.RiskReportConfig) (interface{}, interface{}) {
+	return nil, nil
+}
