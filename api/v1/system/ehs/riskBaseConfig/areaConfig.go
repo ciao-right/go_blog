@@ -44,12 +44,7 @@ func (EHSApi) GetAreaConfigList(c *gin.Context) {
 	}
 	page := utils.StringToInt(c.PostForm("page"))
 	limit := utils.StringToInt(c.PostForm("limit"))
-	if page == 0 {
-		page = 1
-	}
-	if limit == 0 {
-		limit = 10
-	}
+	utils.InitPage(&page, &limit)
 	logic := new(riskBaseService.RiskService)
 	makeExcel := utils.StringToInt(c.PostForm("makeExcel"))
 	if makeExcel == 1 {

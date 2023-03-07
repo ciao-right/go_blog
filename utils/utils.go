@@ -172,3 +172,12 @@ func BetweenString(str, starting, ending string) string {
 	}
 	return str[s : s+e]
 }
+
+func InitPage(page, limit *int) {
+	if *page <= 0 {
+		*page = 1
+	}
+	if *limit <= 0 {
+		*limit = 10
+	}
+}

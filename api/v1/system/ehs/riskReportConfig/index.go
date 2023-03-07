@@ -32,7 +32,31 @@ func (r RiskReportConfigApi) Add(c *gin.Context) {
 }
 
 func (r RiskReportConfigApi) GetList(c *gin.Context) {
-
+	var riskReportConfig riskBaseConfig.RiskReportConfig
+	err := c.ShouldBindJSON(&riskReportConfig)
+	if err != nil {
+		utils.ErrorRes(err, c)
+		return
+	}
+	page := utils.StringToInt(c.PostForm("page"))
+	limit := utils.StringToInt(c.PostForm("limit"))
+	if page == 0 {
+		page = 1
+	}
+	if limit == 0 {
+		limit = 10
+	}
+	logic := new(riskBaseService.RiskReportConfigService)
+	list, err := logic.GetRiskReportConfigList(page, limit, riskReportConfig)
+	if err != nil {
+		utils.ErrorRes(err, c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": 200,
+		"msg":  "success",
+		"data": list,
+	})
 }
 
 func (r RiskReportConfigApi) Update(c *gin.Context) {
